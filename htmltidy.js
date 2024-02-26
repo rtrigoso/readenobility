@@ -167,7 +167,7 @@ function chooseExec() {
 function parseOpts(opts) {
   opts = opts || {};
   const args = [];
-  for (let n in opts) {
+  for (const n in opts) {
     args.push("--" + toHyphens(n));
     switch (typeof opts[n]) {
       case "string":
@@ -200,7 +200,7 @@ function merge(obj1, obj2) {
   obj1 = obj1 || {};
   obj2 = obj2 || {};
   const obj3 = {};
-  for (let attrname in obj2) obj3[attrname] = obj2[attrname];
-  for (let attrname2 in obj1) obj3[attrname2] = obj1[attrname2];
+  for (const attrname in obj2) obj3[attrname] = obj2[attrname];
+  for (const attrname2 in obj1) obj3[attrname2] = obj1[attrname2];
   return obj3;
 }

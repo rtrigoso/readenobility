@@ -556,7 +556,7 @@ let JSDOMParser;
     __JSDOMParser__: true,
   };
 
-  for (let nodeType in nodeTypes) {
+  for (const nodeType in nodeTypes) {
     Node[nodeType] = Node.prototype[nodeType] = nodeTypes[nodeType];
   }
 
@@ -879,7 +879,7 @@ let JSDOMParser;
 
   // For each item in styleMap, define a getter and setter on the style
   // property.
-  for (let jsName in styleMap) {
+  for (const jsName in styleMap) {
     (function (cssName) {
       Style.prototype.__defineGetter__(jsName, function () {
         return this.getStyle(cssName);
