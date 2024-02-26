@@ -3,7 +3,7 @@
 
 module.exports = {
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
   },
   "env": {
     "es6": true,
@@ -23,7 +23,7 @@ module.exports = {
     "brace-style": 2,
 
     // No space before always a space after a comma
-    "comma-spacing": [2, {"before": false, "after": true}],
+    "comma-spacing": [2, { "before": false, "after": true }],
 
     // Commas at the end of the line not the start
     // "comma-style": 2,
@@ -49,7 +49,11 @@ module.exports = {
     "indent": [2, 2, { "SwitchCase": 1 }],
 
     // Space after colon not before in property declarations
-    "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "minimum" }],
+    "key-spacing": [2, {
+      "beforeColon": false,
+      "afterColon": true,
+      "mode": "minimum",
+    }],
 
     // Unix linebreaks
     "linebreak-style": [2, "unix"],
@@ -112,7 +116,14 @@ module.exports = {
     "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
 
     // No unnecessary spacing
-    "no-multi-spaces": [2, { exceptions: { "AssignmentExpression": true, "VariableDeclarator": true, "ArrayExpression": true, "ObjectExpression": true } }],
+    "no-multi-spaces": [2, {
+      exceptions: {
+        "AssignmentExpression": true,
+        "VariableDeclarator": true,
+        "ArrayExpression": true,
+        "ObjectExpression": true,
+      },
+    }],
 
     // No reassigning native JS objects
     "no-native-reassign": 2,
@@ -163,7 +174,7 @@ module.exports = {
     // "no-unused-expressions": 2,
 
     // No declaring variables that are never used
-    "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+    "no-unused-vars": [2, { "vars": "all", "args": "none" }],
 
     // No using variables before defined
     // "no-use-before-define": [2, "nofunc"],
@@ -181,7 +192,7 @@ module.exports = {
     "keyword-spacing": 2,
 
     // Always use double quotes
-    "quotes": [2, "double", {"avoidEscape": true}],
+    "quotes": [2, "double", { "avoidEscape": true }],
 
     // Require space before blocks
     "space-before-blocks": 2,

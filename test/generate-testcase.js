@@ -1,49 +1,57 @@
 /* eslint-env node, mocha */
 
-var debug = false;
+import { join } from "node:path";
+import { exists, mkdir, readdir, readFile, writeFile } from "node:fs";
+import { parse } from "node:url";
+import http from "node:http";
+import https from "node:https";
+import { prettyPrint } from "./utils.js";
+import { isProbablyReaderable, Readability } from "../index.js";
+import JSDOMParser from "../JSDOMParser.js";
+import { tidy as htmltidy } from "../htmltidy.js";
+import {
+  parse,
+  serialize,
+} from "https://deno.land/x/parse5@6.0.2/parse5/lib/index.js";
 
-var path = require("path");
-var fs = require("fs");
-var JSDOM = require("jsdom").JSDOM;
-var prettyPrint = require("./utils").prettyPrint;
-var http = require("http");
-var urlparse = require("url").parse;
-var htmltidy = require("htmltidy2").tidy;
+const debug = false;
 
-var { Readability, isProbablyReaderable } = require("../index");
-var JSDOMParser = require("../JSDOMParser");
+const urlparse = parse;
+const FFX_UA =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:80.0) Gecko/20100101 Firefox/80.0";
+const testcaseRoot = join(__dirname, "test-pages");
 
-var FFX_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:80.0) Gecko/20100101 Firefox/80.0";
-
-var testcaseRoot = path.join(__dirname, "test-pages");
-
-var argURL = process.argv[3]; // Could be undefined, we'll warn if it is if that is an issue.
+const argURL = process.argv[3]; // Could be undefined, we'll warn if it is if that is an issue.
 
 function generateTestcase(slug) {
-  var destRoot = path.join(testcaseRoot, slug);
+  const destRoot = join(testcaseRoot, slug);
 
-  fs.mkdir(destRoot, function(err) {
+  mkdir(destRoot, function (err) {
     if (err) {
-      var sourceFile = path.join(destRoot, "source.html");
-      fs.exists(sourceFile, function(exists) {
+      const sourceFile = join(destRoot, "source.html");
+      exists(sourceFile, function (exists) {
         if (exists) {
-          fs.readFile(sourceFile, {encoding: "utf-8"}, function(readFileErr, data) {
-            if (readFileErr) {
-              console.error("Source existed but couldn't be read?");
-              process.exit(1);
-              return;
-            }
-            onResponseReceived(null, data, destRoot);
-          });
+          readFile(
+            sourceFile,
+            { encoding: "utf-8" },
+            function (readFileErr, data) {
+              if (readFileErr) {
+                console.error("Source existed but couldn't be read?");
+                process.exit(1);
+                return;
+              }
+              onResponseReceived(null, data, destRoot);
+            },
+          );
         } else {
-          fetchSource(argURL, function(fetchErr, data) {
+          fetchSource(argURL, function (fetchErr, data) {
             onResponseReceived(fetchErr, data, destRoot);
           });
         }
       });
       return;
     }
-    fetchSource(argURL, function(fetchErr, data) {
+    fetchSource(argURL, function (fetchErr, data) {
       onResponseReceived(fetchErr, data, destRoot);
     });
   });
@@ -55,24 +63,24 @@ function fetchSource(url, callbackFn) {
     process.exit(1);
     return;
   }
-  var client = http;
+  const client = http;
   if (url.indexOf("https") == 0) {
-    client = require("https");
+    client = https;
   }
-  var options = urlparse(url);
-  options.headers = {"User-Agent": FFX_UA};
+  const options = urlparse(url);
+  options.headers = { "User-Agent": FFX_UA };
 
-  client.get(options, function(response) {
+  client.get(options, function (response) {
     if (debug) {
       console.log("STATUS:", response.statusCode);
       console.log("HEADERS:", JSON.stringify(response.headers));
     }
     response.setEncoding("utf-8");
-    var rv = "";
-    response.on("data", function(chunk) {
+    const rv = "";
+    response.on("data", function (chunk) {
       rv += chunk;
     });
-    response.on("end", function() {
+    response.on("end", function () {
       if (debug) {
         console.log("End received");
       }
@@ -82,12 +90,12 @@ function fetchSource(url, callbackFn) {
 }
 
 function sanitizeSource(html, callbackFn) {
-  htmltidy(new JSDOM(html).serialize(), {
+  htmltidy(serialize(html), {
     "indent": true,
     "indent-spaces": 4,
     "numeric-entities": true,
     "output-xhtml": true,
-    "wrap": 0
+    "wrap": 0,
   }, callbackFn);
 }
 
@@ -100,8 +108,8 @@ function onResponseReceived(error, source, destRoot) {
   if (debug) {
     console.log("writing");
   }
-  var sourcePath = path.join(destRoot, "source.html");
-  fs.writeFile(sourcePath, source, function(err) {
+  const sourcePath = join(destRoot, "source.html");
+  writeFile(sourcePath, source, function (err) {
     if (err) {
       console.error("Couldn't write data to source.html!");
       console.error(err);
@@ -110,14 +118,18 @@ function onResponseReceived(error, source, destRoot) {
     if (debug) {
       console.log("Running readability stuff");
     }
-    runReadability(source, path.join(destRoot, "expected.html"), path.join(destRoot, "expected-metadata.json"));
+    runReadability(
+      source,
+      join(destRoot, "expected.html"),
+      join(destRoot, "expected-metadata.json"),
+    );
   });
 }
 
 function runReadability(source, destPath, metadataDestPath) {
-  var uri = "http://fakehost/test/page.html";
-  var doc = new JSDOMParser().parse(source, uri);
-  var myReader, result, readerable;
+  const uri = "http://fakehost/test/page.html";
+  const doc = new JSDOMParser().parse(source, uri);
+  let myReader, result, readerable;
   try {
     // We pass `caption` as a class to check that passing in extra classes works,
     // given that it appears in some of the test documents.
@@ -129,9 +141,7 @@ function runReadability(source, destPath, metadataDestPath) {
   }
   // Use jsdom for isProbablyReaderable because it supports querySelectorAll
   try {
-    var jsdomDoc = new JSDOM(source, {
-      url: uri,
-    }).window.document;
+    const jsdomDoc = parse(source).window.document;
     myReader = new Readability(jsdomDoc);
     readerable = isProbablyReaderable(jsdomDoc);
   } catch (ex) {
@@ -139,11 +149,13 @@ function runReadability(source, destPath, metadataDestPath) {
     ex.stack.forEach(console.log.bind(console));
   }
   if (!result) {
-    console.error("No content generated by readability, not going to write expected.html!");
+    console.error(
+      "No content generated by readability, not going to write expected.html!",
+    );
     return;
   }
 
-  fs.writeFile(destPath, prettyPrint(result.content), function(fileWriteErr) {
+  writeFile(destPath, prettyPrint(result.content), function (fileWriteErr) {
     if (fileWriteErr) {
       console.error("Couldn't write data to expected.html!");
       console.error(fileWriteErr);
@@ -157,29 +169,35 @@ function runReadability(source, destPath, metadataDestPath) {
     // Add isProbablyReaderable result
     result.readerable = readerable;
 
-    fs.writeFile(metadataDestPath, JSON.stringify(result, null, 2) + "\n", function(metadataWriteErr) {
-      if (metadataWriteErr) {
-        console.error("Couldn't write data to expected-metadata.json!");
-        console.error(metadataWriteErr);
-      }
-    });
+    writeFile(
+      metadataDestPath,
+      JSON.stringify(result, null, 2) + "\n",
+      function (metadataWriteErr) {
+        if (metadataWriteErr) {
+          console.error("Couldn't write data to expected-metadata.json!");
+          console.error(metadataWriteErr);
+        }
+      },
+    );
   });
 }
 
 if (process.argv.length < 3) {
-  console.error("Need at least a destination slug and potentially a URL (if the slug doesn't have source).");
+  console.error(
+    "Need at least a destination slug and potentially a URL (if the slug doesn't have source).",
+  );
   process.exit(0);
   throw "Abort";
 }
 
 if (process.argv[2] === "all") {
-  fs.readdir(testcaseRoot, function(err, files) {
+  readdir(testcaseRoot, function (err, files) {
     if (err) {
       console.error("error reading testcaseses");
       return;
     }
 
-    files.forEach(function(file) {
+    files.forEach(function (file) {
       generateTestcase(file);
     });
   });

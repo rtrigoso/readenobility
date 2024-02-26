@@ -1,3 +1,6 @@
+import { Document } from "https://deno.land/x/deno_dom@v0.1.45/src/dom/document.ts";
+import { Node } from "https://deno.land/x/deno_dom@v0.1.45/src/dom/node.ts";
+
 /**
  * Decides whether or not the document is reader-able without parsing the whole thing.
  * @return {boolean} Whether or not we suspect Readability.parse() will suceeed at returning an article object.
@@ -11,7 +14,7 @@ export function isProbablyReaderable(
     minScore?: number;
     /** The function used to determine if a node is visible. */
     visibilityChecker?: (node: Node) => boolean;
-  }
+  },
 ): boolean;
 
 export class Readability<T = string> {
@@ -27,7 +30,7 @@ export class Readability<T = string> {
       serializer?: (node: Node) => T;
       disableJSONLD?: boolean;
       allowedVideoRegex?: RegExp;
-    }
+    },
   );
 
   parse(): null | {
