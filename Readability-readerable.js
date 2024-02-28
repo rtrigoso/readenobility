@@ -98,7 +98,7 @@ function isProbablyReaderable(doc, options = {}) {
       return false;
     }
 
-    let textContentLength = node.textContent.trim().length;
+    const textContentLength = node.textContent.trim().length;
     if (textContentLength < options.minContentLength) {
       return false;
     }

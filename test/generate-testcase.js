@@ -6,7 +6,7 @@ import { parse } from "node:url";
 import http from "node:http";
 import https from "node:https";
 import { prettyPrint } from "./utils.js";
-import { isProbablyReaderable, Readability } from "../index.js";
+import { isProbablyReaderable, Readability } from "../mod.js";
 import JSDOMParser from "../JSDOMParser.js";
 import { tidy as htmltidy } from "../htmltidy.js";
 import {

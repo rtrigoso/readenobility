@@ -99,20 +99,5 @@
     "https://deno.land/x/parse5@6.0.2/parse5/lib/tree-adapters/default.js": "0a1f6e4a418d476b026abcac257b50a745de2e9eb0ebed4ee9db01df9ee71424",
     "https://deno.land/x/parse5@6.0.2/parse5/lib/utils/merge-options.js": "d11e3cdf277cce07b0466f65adeeb65b9389b1c464bb5ab9f7333a9984d8e244",
     "https://deno.land/x/parse5@6.0.2/parse5/lib/utils/mixin.js": "8939df20ab1270583effdfc2a482702dd1ddc06e0edab6e9f903027bb5648142"
-  },
-  "workspace": {
-    "packageJson": {
-      "dependencies": [
-        "npm:@release-it/keep-a-changelog@5.0.0",
-        "npm:chai@4.3.7",
-        "npm:eslint@8.27.0",
-        "npm:htmltidy2@1.0.0",
-        "npm:js-beautify@1.14.7",
-        "npm:jsdom@20.0.2",
-        "npm:mocha@10.1.0",
-        "npm:release-it@17.0.1",
-        "npm:sinon@14.0.2"
-      ]
-    }
   }
 }

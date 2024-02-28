@@ -6,7 +6,7 @@ import {
   assertNotEquals,
 } from "https://deno.land/std@0.217.0/assert/mod.ts";
 import { getTestPages } from "./utils.js";
-import { isProbablyReaderable } from "../index.js";
+import { isProbablyReaderable } from "../mod.js";
 
 const testPages = getTestPages();
 

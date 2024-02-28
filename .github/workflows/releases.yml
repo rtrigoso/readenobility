@@ -1,0 +1,23 @@
+name: Releases
+
+on: 
+  push:
+    tags:
+      - '*-rc.*'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r mod.zip . -x "test/*"
+    - uses: ncipollo/release-action@v1
+      with:
+        generateReleaseNotes: true
+        prerelease: true
+        artifacts: "mod.zip"

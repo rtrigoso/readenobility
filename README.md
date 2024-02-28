@@ -25,6 +25,7 @@ Readenobility relies on external libraries like
 `deno-dom` to obtain a DOM document object:
 
 ```js
+import "https://deno.land/x/readenobility@$MODULE_VERSION/mod.ts";
 import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 const doc = new DOMParser().parseFromString(
   `

@@ -1,7 +1,34 @@
 {
-  "name": "readenobility",
+  "name": "@renrocks/readenobility",
+  "version": "0.5.1",
+  "description": "A standalone version of the readability library used for Firefox Reader View.",
   "tasks": {
     "dev": "deno run --watch --allow-read main.ts",
-    "test": "deno test --allow-read"
-  }
+    "test": "deno test --allow-read",
+    "lint": "deno lint"
+  },
+  "lint": {
+    "exclude": ["vendor/", "test/test-pages/"],
+    "rules": {
+      "tags": ["recommended"],
+      "exclude": ["no-slow-types"]
+    }
+  },
+  "compilerOptions": {
+    "allowJs": true
+  },
+  "exclude": [
+    "./node_modules",
+    "./.vscode",
+    "./.github",
+    "./test/test-pages",
+    "./.release-it.json",
+    "./.eslintrc.js",
+    "./CHANGELOG.md",
+    "./LICENSE.md",
+    "./README.md",
+    "./.gitignore",
+    "./deno.lock"
+  ],
+  "exports": "./mod.js"
 }
