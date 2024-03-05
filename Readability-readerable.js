@@ -60,7 +60,7 @@ function isProbablyReaderable(doc, options = {}) {
   };
   options = Object.assign(defaultOptions, options);
 
-  const nodes = doc.querySelectorAll("p, pre, article");
+  let nodes = doc.querySelectorAll("p, pre, article");
 
   // Get <div> nodes which have <br> node(s) and append them into the `nodes` constiable.
   // Some articles' DOM structures might look like
